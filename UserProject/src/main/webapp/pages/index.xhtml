@@ -1,0 +1,112 @@
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:h='http://java.sun.com/jsf/html'
+      xmlns:f='http://java.sun.com/jsf/core'
+      xmlns:p='http://primefaces.org/ui'>  
+
+    <h:head><title>Welcome to JSF_PrimeFaces_Hibernate Project</title></h:head>
+
+    <h:body>
+        <script type="text/javascript">
+            function saveRequest(xhr, status, args) {
+                if (args.validationFailed) {
+                    PF('usersave').jq.effect("shake", {times: 5}, 100);
+                }
+                else {
+                    PF('usersave').hide();
+                }
+            }
+            function editRequest(xhr, status, args) {
+                if (args.validationFailed) {
+                    PF('useredit').jq.effect("shake", {times: 5}, 100);
+                }
+                else {
+                    PF('useredit').hide();
+                }
+            }
+        </script>
+        <h:form id="main">
+            <p:growl id="message" showDetail="false"/>
+            <p:dataTable id="allusers" var="userBean" value="#{userManagedBean.allUsers}" selectionMode="single" selection="#{userManagedBean.selectedUser}" rowKey="#{userBean.id}">
+                <f:facet name="header">
+                    User Details
+                </f:facet>
+                <p:column headerText="Id">
+                    <h:outputText value="#{userBean.id}" />
+                </p:column>
+                <p:column headerText="Name">
+                    <h:outputText value="#{userBean.name}" />
+                </p:column>
+                <p:column headerText="Surname">
+                    <h:outputText value="#{userBean.surname}" />
+                </p:column>
+                <p:column headerText="Phone Number">
+                    <h:outputText value="#{userBean.phoneNumber}" />
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton process="allusers" id="addButton" ajax="true" update=":saveform" value="Add" oncomplete="PF('usersave').show()" />
+                    <p:commandButton process="allusers" id="editButton" ajax="true" update="@form" value="Edit" oncomplete="PF('useredit').show()" />
+                    <p:commandButton process="allusers" id="deleteButton" value="delete" actionListener="#{userManagedBean.delete()}" ajax="true" update=":main:message,:main">
+                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                        <p:confirmDialog global="true" showEffect="fade">
+
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" ajax="true" update=":main"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+                        </p:confirmDialog>
+                    </p:commandButton>
+
+                </f:facet>
+            </p:dataTable>
+
+
+            <p:dialog header="User Edit"  widgetVar="useredit" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <h:form id="editform">
+                    <p:outputPanel id="userEdit" style="text-align:center;">
+                        <p:panelGrid  columns="2">
+
+                            <h:outputText value="Id"/>
+                            <h:outputText id="id" value="#{userManagedBean.selectedUser.id}"/>
+
+
+                            <h:outputText value="Name"/>
+                            <p:inputText id="nameedit" value="#{userManagedBean.userName}" required="true"/>
+
+
+                            <h:outputText value="Surname"/>
+                            <p:inputText id="surnameedit" value="#{userManagedBean.userSurname}" required="true"/>
+
+
+                            <h:outputText value="Phone:" />
+                            <p:inputMask id="phoneedit" value="#{userManagedBean.userPhoneNumber}" mask="(999) 999 99 99"/>
+
+                        </p:panelGrid> 
+                        <p:commandButton id="edit" value="edit" validateClient="true" actionListener="#{userManagedBean.update()}" ajax="true" update=":main:message,:main" oncomplete="editRequest(xhr, status, args)"/>
+                        <p:commandButton id="canceledit" value="cancel" ajax="true" onclick="PF('useredit').hide()"/>
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>     
+        </h:form>
+
+
+        <h:form id="saveform">
+            <p:dialog header="Add User"  widgetVar="usersave" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userInfo" style="text-align:center;">
+                    <p:panelGrid  columns="2">
+
+                        <h:outputText value="Name"/>
+                        <p:inputText id="name"  value="#{userManagedBean.userName}" required="true"/>
+
+                        <h:outputText value="Surname"/>
+                        <p:inputText id="surname" value="#{userManagedBean.userSurname}" required="true"/>
+
+                        <h:outputText value="Phone:" />
+                        <p:inputMask id="phone" value="#{userManagedBean.userPhoneNumber}" mask="(999) 999 99 99"/>
+
+                    </p:panelGrid>
+                    <p:commandButton id="save" value="save" validateClient="true" actionListener="#{userManagedBean.save()}" ajax="true" update=":main,:main:message" oncomplete="saveRequest(xhr, status, args)"/>
+                    <p:commandButton id="cancel" value="cancel" ajax="true" onclick="PF('usersave').hide()"/>
+                </p:outputPanel>
+            </p:dialog>     
+        </h:form>
+    </h:body>
+</html>

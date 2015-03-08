@@ -1,0 +1,4 @@
+com\infonal\bean\UserBean.class
+com\infonal\managedbean\UserManagedBean.class
+com\infonal\hibernate\HibernateUtil.class
+com\infonal\managedbeanimpl\ManagedBeanImpl.class
