@@ -2,7 +2,7 @@ this is a simple user information app.
 
 hibernate.cfg.xml has to be updated before you run this app.(user,key)
 
-this is the table creator script :
+this is the table creation script :
 
 CREATE TABLE USER (
    id int(11) NOT NULL,
